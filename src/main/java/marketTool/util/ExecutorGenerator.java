@@ -1,4 +1,4 @@
-package marketTool;
+package marketTool.util;
 
 import marketTool.executor.ICommandExecutor;
 

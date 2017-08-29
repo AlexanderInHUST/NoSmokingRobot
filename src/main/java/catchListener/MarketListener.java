@@ -4,9 +4,6 @@ import marketTool.MarketCmd;
 import util.HttpUtil;
 
 import java.io.*;
-import java.net.URI;
-import java.net.URL;
-import java.net.URLConnection;
 import java.net.URLDecoder;
 
 /**

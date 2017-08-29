@@ -1,12 +1,6 @@
 package marketTool.executor;
 
-import marketTool.NetworkHelper;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
+import marketTool.util.NetworkHelper;
 
 /**
  * Created by tangyifeng on 2017/8/28.

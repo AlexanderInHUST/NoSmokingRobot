@@ -1,4 +1,4 @@
-package marketTool;
+package marketTool.util;
 
 /**
  * Created by tangyifeng on 2017/8/28.

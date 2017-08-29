@@ -1,6 +1,6 @@
 package marketTool.executor;
 
-import marketTool.NetworkHelper;
+import marketTool.util.NetworkHelper;
 
 /**
  * Created by tangyifeng on 2017/8/28.

@@ -1,4 +1,4 @@
-package marketTool;
+package marketTool.util;
 
 import java.io.BufferedReader;
 import java.io.IOException;
