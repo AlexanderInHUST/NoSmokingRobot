@@ -28,7 +28,11 @@ public class ExecutorGenerator {
                     ICommandExecutor executor = argsMap.get(cmd).newInstance();
                     ArrayList<String> a = new ArrayList<String>();
                     for (int i = 0; i < executor.getNumArg(); i++) {
-                        a.add(it.next());
+                        if (it.hasNext()) {
+                            a.add(it.next());
+                        } else {
+                            throw new ArgsNotFoundException();
+                        }
                     }
                     executor.setArgs(a);
                     executors.add(executor);

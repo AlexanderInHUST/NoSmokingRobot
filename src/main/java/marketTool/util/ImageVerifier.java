@@ -8,13 +8,19 @@ import util.FileVerifier;
  */
 public class ImageVerifier {
 
-    public void startVerifier(String file) {
+    private OnChangedListener listener;
+
+    public interface OnChangedListener {
+        public void onChange();
+    }
+
+    public void startVerifier(String file, OnChangedListener listener) {
         FileVerifier verifier = new FileVerifier();
         while (true) {
             try {
                 Thread.sleep(1000);
                 if (!verifier.verify(file)) {
-                    System.out.println("File has changed!");
+                    listener.onChange();
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();

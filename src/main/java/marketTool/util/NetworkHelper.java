@@ -15,10 +15,14 @@ public class NetworkHelper {
 
     private static final int ETH_ID = 1;
     private static final int ICO_ID = 2;
+    private static final int LTC_ID = 3;
     private static final String ICO_ADD = "https://plus-api.btcchina.com/market/ticker?symbol=ICOCNY";
     private static final String ETH_ADD = "https://plus-api.btcchina.com/market/ticker?symbol=ETHCNY";
+    private static final String LTC_ADD = "https://data.btcchina.com/data/ticker?market=ltccny";
+
     private static HashMap<Integer, String> urlMap;
     private static HashMap<String, Integer> whoMap;
+    private static HashMap<Integer, String> whomMap;
 
     private MarketEntity entity;
 
@@ -26,25 +30,35 @@ public class NetworkHelper {
         if (urlMap == null) {
             urlMap = new HashMap<Integer, String>();
             whoMap = new HashMap<String, Integer>();
+            whomMap = new HashMap<Integer, String>();
             initialUrlMap();
             initialWhoMap();
+            initialWhomMap();
         }
     }
 
     private static void initialUrlMap() {
         urlMap.put(ETH_ID, ETH_ADD);
         urlMap.put(ICO_ID, ICO_ADD);
+        urlMap.put(LTC_ID, LTC_ADD);
     }
 
     private static void initialWhoMap() {
         whoMap.put("eth", ETH_ID);
         whoMap.put("ico", ICO_ID);
+        whoMap.put("ltc", LTC_ID);
+    }
+
+    private static void initialWhomMap() {
+        whomMap.put(ETH_ID, "ETHCNY");
+        whomMap.put(ICO_ID, "ICOCNY");
+        whomMap.put(LTC_ID, "LTCCNY");
     }
 
     public void getData(String whoS) {
         int who = whoMap.get(whoS);
         String marketData = getMarketData(who);
-        entity = parseEntity(marketData);
+        entity = parseEntity(marketData, who);
     }
 
     public String getSymbol() {
@@ -84,21 +98,33 @@ public class NetworkHelper {
         return null;
     }
 
-    private MarketEntity parseEntity(String json) {
+    private MarketEntity parseEntity(String json, int who) {
         MarketEntity entity = new MarketEntity();
         String[] jsons = json.split("\"");
         for (int i = 0; i < jsons.length; i++) {
-            if (jsons[i].equals("Last")) {
-                entity.setLastPrice(Double.parseDouble(jsons[i + 1].split(":|,")[1]));
+            if (i == 0) {
+                entity.setSymbol(whomMap.get(who));
             }
-            if (jsons[i].equals("Symbol")) {
-                entity.setSymbol(jsons[i + 2]);
-            }
-            if (jsons[i].equals("BidPrice")) {
-                entity.setBidPrice(Double.parseDouble(jsons[i + 1].split(":|,")[1]));
-            }
-            if (jsons[i].equals("AskPrice")) {
-                entity.setAskPrice(Double.parseDouble(jsons[i + 1].split(":|,")[1]));
+            if (who == ETH_ID || who == ICO_ID) {
+                if (jsons[i].equals("Last")) {
+                    entity.setLastPrice(Double.parseDouble(jsons[i + 1].split(":|,")[1]));
+                }
+                if (jsons[i].equals("BidPrice")) {
+                    entity.setBidPrice(Double.parseDouble(jsons[i + 1].split(":|,")[1]));
+                }
+                if (jsons[i].equals("AskPrice")) {
+                    entity.setAskPrice(Double.parseDouble(jsons[i + 1].split(":|,")[1]));
+                }
+            } else {
+                if (jsons[i].equals("last")) {
+                    entity.setLastPrice(Double.parseDouble(jsons[i + 2]));
+                }
+                if (jsons[i].equals("sell")) {
+                    entity.setBidPrice(Double.parseDouble(jsons[i + 2]));
+                }
+                if (jsons[i].equals("buy")) {
+                    entity.setAskPrice(Double.parseDouble(jsons[i + 2]));
+                }
             }
         }
         return entity;

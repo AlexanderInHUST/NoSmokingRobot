@@ -42,6 +42,7 @@ public class MarketListener implements IOnCatchListener {
         String marketData;
         MarketCmd marketCmd = new MarketCmd(content);
         marketData = marketCmd.executeCmd();
+        System.out.println(marketData);
         try {
             HttpUtil.sendGet("http://127.0.0.1:5000/openqq/send_group_message?uid=" + groupUid + "&content=" +
                     URLDecoder.decode(marketData, "utf-8"));

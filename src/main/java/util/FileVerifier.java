@@ -17,6 +17,9 @@ public class FileVerifier {
 
     public boolean verify(String file) {
         String curFileCode = getCode(file);
+        if (curFileCode == null) {
+            return true;
+        }
         if (lastFileCode == null) {
             lastFileCode = curFileCode;
             return true;
@@ -33,15 +36,19 @@ public class FileVerifier {
     private String getCode(String fileName) {
         try {
             File file = new File(fileName);
-            FileInputStream inputStream = new FileInputStream(file);
-            MessageDigest digest = MessageDigest.getInstance("MD5");
-            DigestInputStream digestInputStream = new DigestInputStream(inputStream, digest);
-            int bufSize = 256 * 1024;
-            byte[] buf = new byte[bufSize];
-            while (digestInputStream.read(buf) > 0) ;
-            digest = digestInputStream.getMessageDigest();
-            byte[] resultBuf = digest.digest();
-            return byteArrayToHex(resultBuf);
+            if (file.exists()) {
+                FileInputStream inputStream = new FileInputStream(file);
+                MessageDigest digest = MessageDigest.getInstance("MD5");
+                DigestInputStream digestInputStream = new DigestInputStream(inputStream, digest);
+                int bufSize = 256 * 1024;
+                byte[] buf = new byte[bufSize];
+                while (digestInputStream.read(buf) > 0) ;
+                digest = digestInputStream.getMessageDigest();
+                byte[] resultBuf = digest.digest();
+                return byteArrayToHex(resultBuf);
+            } else {
+                return null;
+            }
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         } catch (IOException e) {
